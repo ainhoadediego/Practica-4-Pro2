@@ -1,3 +1,7 @@
+# Lucía Vega Navarrete. lucia.vega.navarrete@udc.es
+# Ainhoa de Diego Silva. ainhoa.dediego.silva@udc.es
+
+#from .paquete import * (???)
 from course import Course
 from avl_tree import AVL
 import pandas
