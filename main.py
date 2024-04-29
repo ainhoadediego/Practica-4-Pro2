@@ -82,8 +82,27 @@ def read_file(name):
         return academy
     
 def preorder_indent_BST(T, p, d):
-    """Print preorder representation of a binary subtree of T rooted at p at depth d.
-        To print aTree completely call preorder_indent_BST(aTree, aTree.root(), 0)"""
+    """Returns the graphical representation of the preorder (root, left, right) traversal of the tree T.
+
+    Parameters
+    ----------
+    T: AVL(BST)
+        Given AVL binary search tree.
+
+    p: Node(BST._Node)
+        Starting node to begin the traversal.
+
+    d: int
+        Depth at which the current node is to begin the traversal.
+
+    Returns
+    -------
+    str
+        Prints the preorder representation of a binary subtree of T rooted at p at depth d.
+        To print the entire tree, call preorder_indent_BST(aTree, aTree.root(), 0).
+"""
+
+    
     if p is not None:
         # use depth for indentation
         print(2*d*' ' + "(" + str(p.key()) + "; " +  str(p.value()) + ")") 
@@ -91,27 +110,65 @@ def preorder_indent_BST(T, p, d):
         preorder_indent_BST(T, T.right(p), d+1) # right child depth is d+1
 
 def search(tree, position, key):
-    """Devuelve la posicion a la que le corresponde la clave key.
-    Si no la encuentra, devuelve None."""
-    if position is None: # ha llegado a una hoja
+    """Performs the search in a tree.
+
+    Parameters
+    ----------
+    tree: Tree()
+        Given binary search tree.
+
+    position: Position(PositionalBinaryTree.Position)
+        Position to start the search from.
+
+    key: 
+        Key-value pair.
+
+    Returns
+    -------
+    str
+        Returns the position corresponding to the key value.
+        If not found, returns None.
+"""
+
+
+    if position is None: # has reached a leaf
         return None
-    elif key == position.key(): # la clave esta en la raiz
+    elif key == position.key(): # the key is in the root
         return position
-    elif key < position.key(): # si la clave es menor, busca a la izquierda
+    elif key < position.key(): # if the key is smaller, search to the left
         return search(tree, tree.left(position), key)
-    else: # si la clave es mayor, busca a la derecha
+    else: # if the key is greater, search to the right
         return search(tree, tree.right(position), key)
 
 def common_course(tree_A: AVL, tree_B: AVL, key_A, key_B):
-    """Combina dos cursos iguales en dos arboles de cursos. 
-    Crea un curso nuevoa partir del más rentable combinando los estudiantes.
-    Precondicion: el mismo curso esta en los 2 arboles."""
-    course_A = tree_A[key_A] # devuelve un objeto curso
-    course_B = tree_B[key_B] # devuelve un objeto curso
-    # el numero de estudiantes se suma
+    """Combines two identical courses in two course trees.
+    Parameters
+    ----------
+    tree_A: AVL(BST)
+        Tree representing course A.
+
+    tree_B: AVL(BST)
+        Tree representing course B.
+
+    key_A: 
+        Key-value pair for course A.
+
+    key_B: 
+        Key-value pair for course B.
+
+    Returns
+    -------
+    new_course: Course()
+
+    Creates a new course from the most profitable one by combining the students.
+    Precondition: the same course is in both trees."""
+
+    course_A = tree_A[key_A] # returns a course object
+    course_B = tree_B[key_B] # returns a course object
+    # the number of students is added
     n_students = course_A.number_students + course_B.number_students
-    # comprueba que curso es mas rentable
-    # añade el a si es mas rentable o igual de rentable
+    # checks which course is more profitable
+    #adds it if it is more profitable or equally profitable
     if course_A.g_benefit(course_B) or course_A.eq_benefit(course_B):
         new_course = Course(course_A.name, course_A.duration, n_students, course_A.level, course_A.language, course_A.price)
     else: 
@@ -119,27 +176,60 @@ def common_course(tree_A: AVL, tree_B: AVL, key_A, key_B):
     return new_course
 
 def common_offer(tree_A: AVL, tree_B: AVL) -> AVL:
-    common_tree = AVL() # crea un arbol vacio (equivale a la academia C)
-    for key_A in iter(tree_A): # recorre los cursos de la academia A
-        aux = search(tree_B, tree_B.root(), key_A) # busca un curso igual en la academia B. 
-        # aux es la posicion donde esté
-        # aux es None no lo ha encontrado, si no, está en la raíz
+    """Creates a common tree with the trees of both academies.
+    Parameters
+    ----------
+    tree_A: AVL(BST)
+        Tree representing course A.
+
+    tree_B: AVL(BST)
+        Tree representing course B.
+
+    Returns
+    -------
+    common_tree: AVL(BST)
+
+    Creates a tree for a new academy C (that includes A and B) representing the 
+    courses of both academies, adding only the common activities of A and B."""
+
+    common_tree = AVL() # creates an empty tree (equivalent to academy C)
+    for key_A in iter(tree_A): # iterates over the courses of academy A
+        aux = search(tree_B, tree_B.root(), key_A) # searches for a matching course in academy B.
+        # aux is the position where it is
+        #aux is None if not found, otherwise, it is at the root
         if aux is not None:
             new_course = common_course(tree_A, tree_B, key_A, aux.key())
             common_tree[new_course.label()] = new_course
     return common_tree
 
 def added_offer(tree_A: AVL, tree_B: AVL) -> AVL:
-    added_tree = AVL() # crea un arbol vacio (equivale a la academia C)
-    for key_A in iter(tree_A): # recorre los cursos de la academia B
-        # si encuentra un curso son igual, añade el más rentable
+    """Creates a common tree with the trees of both academies
+    Parameters
+    ----------
+    tree_A: AVL(BST)
+        Tree representing course A.
+
+    tree_B: AVL(BST)
+        Tree representing course B.
+
+    Returns
+    -------
+    added_tree: AVL(BST)
+
+    Creates a tree for a new academy C (that includes A and B) representing the 
+    courses of both academies.
+
+    """
+    added_tree = AVL() # creates an empty tree (equivalent to academy C)
+    for key_A in iter(tree_A): # iterates over the courses of academy B
+        # if it finds a matching course, adds the more profitable one
         aux = search(tree_B, tree_B.root(), key_A)
         if aux is not None: 
             new_course = common_course(tree_A, tree_B, key_A, aux.key())
             added_tree[new_course.label()] = new_course
-        else: # si no encuentra un curso igual
-            for key_B in iter(tree_B): # recorre los cursos de la academia B
-                # si tienen el mismo nombre pero no son iguales
+        else: # if it doesn't find a matching cours
+            for key_B in iter(tree_B): # iterates over the courses of academy B
+                # if they have the same name but are not identical
                 if (tree_A[key_A].name == tree_B[key_B].name) and not (tree_A[key_A] == tree_B[key_B]):
                     course_A, course_B = tree_A[key_A], tree_B[key_B]
                     new_course = Course(course_A.name + " Academia A", course_A.duration, course_A.number_students, course_A.level, course_A.language, course_A.price)
