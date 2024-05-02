@@ -462,7 +462,17 @@ def total_benefit(tree: AVL, tree_name: str):
     print(f"{tree_name}: {s.sum()} € \n")
     
 def main():
+    """Internal structure of the menu that assigns each option its functions
+    to achieve the goal shown in the menu.
 
+    Parameters
+    ----------
+    None.
+
+    Returns
+    -------
+    None.
+    """
     OPTIONS = ("0", "1", "2", "3", "4")
     MAIN_MENU_OP = ("Exit.","Read course files A and B and insert them into AVL trees.",
                     "Show 'added offer'.", "Show 'common offer'.",
@@ -490,17 +500,17 @@ def main():
             print(f"You selected: {MAIN_MENU_OP[1]}\n")
             academy_a = file("first")
             academy_b = file("second")
-            # reinicia los árboles añadido y común para los nuevos archivos
+            # initializes the trees
             added_tree = common_tree = None
-            trees_data = [] # reinicia los datos
+            trees_data = [] # initializes data list
 
-        elif main_op == OPTIONS[2]: # Realizar la operación “oferta agregada” y visualizar el resultado
+        elif main_op == OPTIONS[2]: # Perform the 'added offer' operation and view the result
             print(f"You selected:{MAIN_MENU_OP[2]}\n")
             added_tree = added_offer(academy_a, academy_b, ACADEMIES[:2]) # The first 2 elements of the tuple are the names of academies A and B
             print(f"Added offer of {ACADEMIES[0]} and {ACADEMIES[1]}: \n") # Added offer of Academy A and Academy B
             show_courses(added_tree)
 
-        elif main_op == OPTIONS[3]: # Realizar la operación “oferta común” y visualizar el resultado.
+        elif main_op == OPTIONS[3]: # Perform the 'common offer' operation and view the result
             print(f"You selected: {MAIN_MENU_OP[3]}\n")
             common_tree = common_offer(academy_a, academy_b)
             print(f"Common offer of {ACADEMIES[0]} and {ACADEMIES[1]}:: \n") # Common offer of Academy A and Academy B
@@ -535,7 +545,7 @@ def main():
                     for i in range(len(ACADEMIES)):
                         show_data(trees_data[i], LEVEL, STUDENTS, ACADEMIES[i])
 
-                else: # Ingresos totales posibles.
+                else: # total income
                     print(f"You selected: {SIDE_MENU_OP[3]}\n")
                     
                     print ("-"*63)
